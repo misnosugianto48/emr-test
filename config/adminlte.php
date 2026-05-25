@@ -300,10 +300,20 @@ return [
 
     'menu' => [
 
+        // [
+        //     'text' => 'Dashboard',
+        //     'url'  => 'dashboard',
+        //     'icon' => 'fas fa-home',
+        // ],
+
         [
-            'text' => 'Dashboard',
-            'url'  => 'dashboard',
-            'icon' => 'fas fa-home',
+            'header' => 'REPORTS',
+        ],
+
+        [
+            'text' => 'Visit Reports',
+            'url'  => 'reports',
+            'icon' => 'fas fa-chart-bar',
         ],
 
         [
@@ -322,15 +332,7 @@ return [
             'icon' => 'fas fa-notes-medical',
         ],
 
-        [
-            'header' => 'REPORTS',
-        ],
 
-        [
-            'text' => 'Visit Reports',
-            'url'  => 'reports',
-            'icon' => 'fas fa-chart-bar',
-        ],
     ],
 
     /*

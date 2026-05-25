@@ -8,26 +8,24 @@ use App\Http\Controllers\VisitController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/login');
 });
 
-Route::resource('patients', PatientController::class);
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 
-Route::resource('visits', VisitController::class);
-Route::patch('visits/{visit}/cancel', [VisitController::class, 'cancel'])->name('visits.cancel');
+    Route::resource('patients', PatientController::class);
 
-Route::resource('assessments', AssessmentController::class)->except(['create']);
-Route::get('assessments/create/{visit}', [AssessmentController::class, 'create'])->name('assessments.create');
+    Route::resource('visits', VisitController::class);
+    Route::patch('visits/{visit}/cancel', [VisitController::class, 'cancel'])->name('visits.cancel');
 
-Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::resource('assessments', AssessmentController::class)->except(['create']);
+    Route::get('assessments/create/{visit}', [AssessmentController::class, 'create'])->name('assessments.create');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
