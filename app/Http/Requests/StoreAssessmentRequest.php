@@ -29,7 +29,8 @@ class StoreAssessmentRequest extends FormRequest
             'temperature' => 'required|numeric',
             'weight' => 'required|numeric',
             'initial_diagnosis' => 'required',
-            'therapy' => 'required'
+            'therapy' => 'required',
+            'doctor_notes' => 'nullable'
         ];
     }
 }

@@ -1,58 +1,107 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Simple Electronic Medical Record (EMR) System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem Pencatatan Rekam Medis Elektronik (EMR) sederhana untuk Klinik/Rumah Sakit Rawat Jalan. Sistem ini mengelola data pasien, pendaftaran kunjungan, asesmen klinis oleh dokter/perawat, hingga laporan statistik kunjungan.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Fitur Utama
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Sistem ini dirancang dengan alur kerja pelayanan klinik yang teratur:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. **Pendaftaran Pasien & Kunjungan**
+   - **Manajemen Pasien**: CRUD lengkap data pasien dengan validasi data yang ketat.
+   - **Kunjungan Baru**: Menggunakan komponen **Select2** untuk memudahkan pencarian data pasien lama tanpa harus membuat baru, beserta fitur pembatalan kunjungan (`cancelled`).
 
-## Learning Laravel
+2. **Asesmen Rawat Jalan (Rekam Medis Dokter)**
+   - **Tanda-tanda Vital**: Tekanan Darah (mmHg), Suhu Tubuh (°C), dan Berat Badan (kg).
+   - **Pemeriksaan Medis**: Anamnesis Keluhan Utama, Diagnosis Awal, Terapi / Tindakan, dan Catatan Internal Dokter.
+   - **Pembaruan Status Otomatis**: Status Kunjungan otomatis diperbarui dari `registered` (Terdaftar) menjadi `assessed` (Sudah Asesmen) seketika setelah hasil asesmen disimpan secara aman di dalam **Database Transaction**.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+3. **Laporan Kunjungan (Visit Reports)**
+   - **Advanced Query Filter**: Penyaringan laporan fleksibel berdasarkan rentang Tanggal, Nama Pasien, Dokter, Diagnosis, dan Status Kunjungan.
+   - **Summary Info Box**: Menampilkan statistik ringkasan total kunjungan, antrean belum diperiksa, selesai diperiksa, dan batal yang berubah secara dinamis berdasarkan filter aktif.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+4. **Keamanan & Autentikasi**
+   - Seluruh panel dilindungi oleh sistem autentikasi **Laravel Breeze**.
+   - Pengunjung anonim akan otomatis diblokir dan dialihkan langsung ke halaman **Login**.
+   - Setelah masuk (Login), pengguna langsung diarahkan ke halaman **Visit Reports** (Laporan Kunjungan) sebagai pusat dashboard operasional.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+---
 
-## Agentic Development
+## 🏛️ Arsitektur Aplikasi (Layered Architecture)
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Aplikasi ini dibangun menggunakan arsitektur berlapis (*Layered Architecture*) untuk memastikan kerapian kode, modularitas, kemudahan pengujian, dan skalabilitas di masa depan:
 
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```
+Request ➔ Controller ➔ Service Layer ➔ Repository Layer ➔ Eloquent Model / Database
+  │           ▲
+  ▼           │
+Form Request Validation
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+* **Controller**: Bertanggung jawab atas alur navigasi HTTP dan merender tampilan (*view*).
+* **Form Request Validation**: Memastikan seluruh inputan formulir aman, lengkap, dan tervalidasi sebelum masuk ke logika bisnis.
+* **Service Layer**: Menangani seluruh aturan dan logika bisnis (misalnya kalkulasi status medis).
+* **Repository Layer**: Lapisan khusus untuk mengabstraksikan kueri database (Eloquent) agar tidak bercampur dengan logika bisnis.
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🛠️ Stack Teknologi
 
-## Code of Conduct
+* **Core Framework**: Laravel 13 (PHP 8.2+)
+* **Authentication**: Laravel Breeze
+* **Admin Panel UI**: Laravel AdminLTE v3
+* **CSS & Components Framework**: Bootstrap 5 & FontAwesome 5
+* **Interactions**: Select2 (Pencarian Dropdown Dinamis) & jQuery
+* **Database**: MySQL
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 💻 Langkah Instalasi & Uji Coba
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Ikuti langkah-langkah di bawah ini untuk menjalankan aplikasi di lingkungan lokal Anda:
 
-## License
+### 1. Persiapan Awal
+Pastikan Anda sudah berada di direktori proyek dan jalankan pemasangan dependensi backend serta frontend:
+```bash
+composer install
+npm install
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 2. Konfigurasi Environment
+Salin berkas konfigurasi `.env` dan sesuaikan pengaturan koneksi database MySQL Anda:
+```bash
+cp .env.example .env
+```
+Jangan lupa generate app key:
+```bash
+php artisan key:generate
+```
+
+### 3. Migrasi & Seeder Database
+Jalankan migrasi tabel beserta seeder untuk membuat akun Admin awal secara otomatis:
+```bash
+php artisan migrate --seed
+```
+
+### 4. Menjalankan Server Lokal
+Jalankan server aplikasi Laravel bersamaan dengan compiler aset Vite di terminal terpisah:
+```bash
+# Terminal 1 (Backend)
+php artisan serve
+
+# Terminal 2 (Vite Assets compiler)
+npm run dev
+```
+
+---
+
+## 🔑 Kredensial Login Default
+
+Setelah server berjalan, buka peramban dan akses alamat server lokal Anda (secara default: `http://127.0.0.1:8000`). Anda akan langsung diarahkan ke halaman Login. Gunakan akun berikut:
+
+* **Email**: `admin@emr.com`
+* **Password**: `password`
+
+---
+*EMR-Test System © 2026. Made with ❤️ using Laravel, AdminLTE ChatGPT and Antigravity.*
